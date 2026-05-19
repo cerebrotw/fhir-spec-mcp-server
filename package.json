@@ -1,6 +1,6 @@
 {
   "name": "fhir-mcp-server",
-  "version": "1.0.1",
+  "version": "1.14.2",
   "description": "MCP server for FHIR documentation – HL7 International (R4/R5) and Belgian eHealth IGs",
   "license": "MIT",
   "author": "cerebrotw",
