@@ -1,6 +1,6 @@
 # FHIR MCP Server
 
-[![npm version](https://img.shields.io/npm/v/fhir-mcp-server)](https://www.npmjs.com/package/fhir-mcp-server)
+[![npm version](https://img.shields.io/npm/v/fhir-spec-mcp-server)](https://www.npmjs.com/package/fhir-spec-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 An MCP (Model Context Protocol) server that provides access to FHIR documentation from:
@@ -27,7 +27,7 @@ No installation required. Add to your MCP client configuration:
   "mcpServers": {
     "fhir-docs": {
       "command": "npx",
-      "args": ["-y", "fhir-mcp-server"]
+      "args": ["-y", "fhir-spec-mcp-server"]
     }
   }
 }

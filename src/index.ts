@@ -6,7 +6,7 @@ import { fetchAndParse } from "./utils/fetcher.js";
 import { getHL7BaseUrl, BELGIAN_IGs } from "./utils/config.js";
 
 const server = new McpServer({
-  name: "fhir-mcp-server",
+  name: "fhir-spec-mcp-server",
   version: "1.0.0",
 });
 

@@ -1,5 +1,5 @@
 {
-  "name": "fhir-mcp-server",
+  "name": "fhir-spec-mcp-server",
   "version": "1.0.0",
   "description": "MCP server for FHIR documentation – HL7 International (R4/R5) and Belgian eHealth IGs",
   "license": "MIT",
@@ -11,7 +11,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "fhir-mcp-server": "dist/index.js"
+    "fhir-spec-mcp-server": "dist/index.js"
   },
   "files": [
     "dist/",
