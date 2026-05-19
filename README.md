@@ -1,5 +1,6 @@
 # FHIR MCP Server
 
+[![npm version](https://img.shields.io/npm/v/fhir-mcp-server)](https://www.npmjs.com/package/fhir-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 An MCP (Model Context Protocol) server that provides access to FHIR documentation from:
@@ -15,27 +16,24 @@ An MCP (Model Context Protocol) server that provides access to FHIR documentatio
 | `list_belgian_igs` | List all Belgian FHIR Implementation Guides |
 | `get_belgian_ig_page` | Fetch a page from a Belgian IG (e.g. core, medication, lab) |
 
-## Build
+## Installation
 
-```bash
-npm install
-npm run build
-```
-
-## Configure in GitHub Copilot / Claude Desktop
-
-Add to your MCP client configuration (e.g. `~/.copilot/mcp.json` or `claude_desktop_config.json`):
+No installation required. Add to your MCP client configuration:
+- **GitHub Copilot**: `~/.copilot/mcp.json`
+- **Claude Desktop**: `claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "fhir-docs": {
-      "command": "node",
-      "args": ["/path/to/fhir-mcp-server/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "fhir-mcp-server"]
     }
   }
 }
 ```
+
+`npx` will download and run the server automatically — no cloning or building needed.
 
 ## Example usage
 
@@ -54,5 +52,8 @@ Add to your MCP client configuration (e.g. `~/.copilot/mcp.json` or `claude_desk
 ## Development
 
 ```bash
+git clone https://github.com/cerebrotw/fhir-mcp-server.git
+cd fhir-mcp-server
+npm install
 npm run dev   # Run with tsx (no build needed)
 ```

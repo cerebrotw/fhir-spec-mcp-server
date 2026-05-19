@@ -10,17 +10,29 @@
   },
   "type": "module",
   "main": "dist/index.js",
+  "bin": {
+    "fhir-mcp-server": "./dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
+    "prepare": "tsc",
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.0",
-    "axios": "^1.7.0",
-    "cheerio": "^1.0.0",
-    "turndown": "^7.2.0",
-    "zod": "^3.23.0"
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "axios": "1.16.1",
+    "cheerio": "1.2.0",
+    "turndown": "7.2.4",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
