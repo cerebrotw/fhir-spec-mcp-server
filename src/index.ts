@@ -2,7 +2,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { fetchAndParse } from "./utils/fetcher.js";
+import { fetchAndParse, fetchResourceSection, type ResourceSection } from "./utils/fetcher.js";
 import { getHL7BaseUrl, BELGIAN_IGs } from "./utils/config.js";
 
 const server = new McpServer({
@@ -10,21 +10,49 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// ─── Tool 1: Get a FHIR resource page ────────────────────────────────────────
+// ─── Tool 1: Get a FHIR resource page (optionally a specific section) ─────────
 server.tool(
   "get_fhir_resource",
-  "Fetch the definition page for a specific FHIR resource from the HL7 specification (e.g. Patient, Observation, Encounter, Bundle). Prefer R4 unless the user specifies a version.",
+  `Fetch documentation for a specific FHIR resource from the HL7 specification.
+Use the 'section' parameter to request only the part you need — this returns much less data than the full page:
+- overview       : Scope, boundaries, and usage description
+- structure      : Compact field-by-field definition table (name, cardinality, type, description)
+- json           : JSON resource template/format
+- xml            : XML resource template/format
+- search-params  : All search parameters for this resource
+- examples       : Fetch the separate examples sub-page (e.g. patient-examples.html)
+Omit 'section' only if you genuinely need the full page.`,
   {
     resource_name: z
       .string()
-      .describe("FHIR resource name (e.g. 'Patient', 'Observation', 'Encounter'). Case-insensitive."),
+      .describe("FHIR resource name (e.g. 'Patient', 'Observation', 'AllergyIntolerance'). Case-insensitive."),
     version: z
       .enum(["R5", "R4B", "R4", "STU3"])
       .default("R4")
       .describe("FHIR version. Defaults to R4."),
+    section: z
+      .enum(["overview", "structure", "json", "xml", "search-params", "examples"])
+      .optional()
+      .describe("Section of the resource page to fetch. Strongly preferred over fetching the full page."),
   },
-  async ({ resource_name, version }) => {
-    const url = `${getHL7BaseUrl(version)}${resource_name.toLowerCase()}.html`;
+  async ({ resource_name, version, section }) => {
+    const baseName = resource_name.toLowerCase();
+    const baseUrl  = getHL7BaseUrl(version);
+
+    if (section === "examples") {
+      const url = `${baseUrl}${baseName}-examples.html`;
+      const content = await fetchAndParse(url);
+      return { content: [{ type: "text", text: content }] };
+    }
+
+    if (section) {
+      const url     = `${baseUrl}${baseName}.html`;
+      const content = await fetchResourceSection(url, section as ResourceSection);
+      return { content: [{ type: "text", text: content }] };
+    }
+
+    // No section requested: full page (use sparingly)
+    const url     = `${baseUrl}${baseName}.html`;
     const content = await fetchAndParse(url);
     return { content: [{ type: "text", text: content }] };
   }
@@ -44,7 +72,7 @@ server.tool(
       .describe("FHIR version. Defaults to R4."),
   },
   async ({ path, version }) => {
-    const url = `${getHL7BaseUrl(version)}${path}`;
+    const url     = `${getHL7BaseUrl(version)}${path}`;
     const content = await fetchAndParse(url);
     return { content: [{ type: "text", text: content }] };
   }
@@ -89,7 +117,7 @@ server.tool(
       const valid = BELGIAN_IGs.map(i => i.git).join(", ");
       throw new Error(`Unknown IG '${ig_name}'. Valid names: ${valid}`);
     }
-    const url = `https://www.ehealth.fgov.be/standards/fhir/${ig.link}/${page_path}`;
+    const url     = `https://www.ehealth.fgov.be/standards/fhir/${ig.link}/${page_path}`;
     const content = await fetchAndParse(url);
     return { content: [{ type: "text", text: content }] };
   }
